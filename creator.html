@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JirPlays · Creator Hub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="JirPlays creator hub — streams, schedules, links, and community.">
+<meta name="theme-color" content="#0b0b12">
+
+<style>
+:root{
+  --bg:#0b0b12;
+  --bg2:#101024;
+  --text:#f2f2f5;
+  --muted:#b6b6c9;
+  --line:rgba(255,255,255,.15);
+  --gold:#d6b36a;
+
+  --radius:18px;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  background:
+    radial-gradient(900px 600px at 20% -10%, rgba(214,179,106,.12), transparent 60%),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+  color:var(--text);
+}
+
+main{
+  max-width:1100px;
+  margin:0 auto;
+  padding:48px 24px;
+}
+
+header{
+  margin-bottom:48px;
+}
+header h1{
+  margin:0;
+  font-size:42px;
+}
+header p{
+  margin:8px 0 0;
+  color:var(--muted);
+  font-size:18px;
+}
+
+.section{
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:28px;
+  background:rgba(255,255,255,.05);
+  margin-bottom:32px;
+}
+
+.section h2{
+  margin-top:0;
+}
+
+a{
+  color:var(--gold);
+  text-decoration:none;
+}
+a:hover{ text-decoration:underline; }
+
+.links{
+  display:grid;
+  gap:14px;
+}
+@media(min-width:720px){
+  .links{ grid-template-columns:repeat(2,1fr); }
+}
+
+.link-card{
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:16px;
+  background:rgba(255,255,255,.04);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.schedule-row{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+  padding:10px 0;
+}
+.schedule-row:not(:last-child){
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+footer{
+  margin-top:64px;
+  text-align:center;
+  font-size:13px;
+  color:var(--muted);
+}
+</style>
+</head>
+
+<body>
+<main>
+
+<header>
+  <h1>🐼 JirPlays</h1>
+  <p>Chaotic-cozy creator hub</p>
+</header>
+
+<section class="section">
+  <h2>Schedule</h2>
+  <div class="schedule-row">
+    <strong>Wednesday</strong>
+    <span>9AM–3PM</span>
+    <span>Twitch Stream</span>
+  </div>
+  <div class="schedule-row">
+    <strong>Friday</strong>
+    <span>—</span>
+    <span>TikTok Content</span>
+  </div>
+  <div class="schedule-row">
+    <strong>Sunday</strong>
+    <span>7PM</span>
+    <span>YouTube Release</span>
+  </div>
+  <p style="color:var(--muted);margin-top:12px;">All times EST.</p>
+</section>
+
+<section class="section">
+  <h2>Links</h2>
+  <div class="links">
+    <div class="link-card">
+      <span>Twitch</span>
+      <a href="https://twitch.tv/JirPlays" target="_blank">Visit</a>
+    </div>
+    <div class="link-card">
+      <span>YouTube</span>
+      <a href="https://youtube.com/@jirplays82" target="_blank">Visit</a>
+    </div>
+    <div class="link-card">
+      <span>TikTok</span>
+      <a href="https://www.tiktok.com/@jirplays82" target="_blank">Visit</a>
+    </div>
+    <div class="link-card">
+      <span>Steam</span>
+      <a href="https://steamcommunity.com/profiles/76561198041060253/" target="_blank">Visit</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Community Vibe</h2>
+  <ul>
+    <li>Kind-first chat</li>
+    <li>Cozy chaos energy</li>
+    <li>Pandas & red pandas only 🐼</li>
+  </ul>
+</section>
+
+<footer>
+  <p>© 2026–<span id="year"></span> JirPlays</p>
+</footer>
+
+</main>
+
+<script>
+  (function(){
+    const y = document.getElementById("year");
+    if(y) y.textContent = new Date().getFullYear();
+  })();
+</script>
+
+</body>
+</html>
