@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>JirPlays</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="JirPlays — chaotic-cozy creator hub and the Obsidian Accords sci-fi archive.">
+<meta name="theme-color" content="#0b0b12">
+
+<style>
+:root{
+  --bg:#0b0b12;
+  --bg2:#101024;
+  --text:#f2f2f5;
+  --muted:#b6b6c9;
+  --line:rgba(255,255,255,.15);
+
+  --gold:#d6b36a;
+  --mint:#7ef5d1;
+
+  --radius:22px;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  background:
+    radial-gradient(800px 600px at 20% -10%, rgba(214,179,106,.12), transparent 60%),
+    radial-gradient(900px 700px at 80% 10%, rgba(126,245,209,.10), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+  color:var(--text);
+  display:grid;
+  place-items:center;
+}
+
+main{
+  max-width:980px;
+  width:100%;
+  padding:48px 24px;
+}
+
+header{
+  text-align:center;
+  margin-bottom:48px;
+}
+header h1{
+  margin:0 0 8px;
+  font-size:44px;
+  letter-spacing:.5px;
+}
+header p{
+  margin:0;
+  color:var(--muted);
+  font-size:18px;
+}
+
+.choices{
+  display:grid;
+  gap:24px;
+}
+@media(min-width:820px){
+  .choices{grid-template-columns:1fr 1fr}
+}
+
+.card{
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:30px;
+  background:rgba(255,255,255,.05);
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 22px 55px rgba(0,0,0,.4);
+}
+
+.symbol{
+  font-size:42px;
+  line-height:1;
+}
+.symbol.creator{
+  filter:drop-shadow(0 0 12px rgba(214,179,106,.45));
+}
+.symbol.accords img{
+  width:64px;
+  height:64px;
+  filter:
+    drop-shadow(0 0 10px rgba(126,245,209,.45))
+    drop-shadow(0 0 18px rgba(126,245,209,.25));
+}
+
+.card h2{
+  margin:0;
+  font-size:28px;
+}
+.card p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.5;
+}
+
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:auto;
+}
+.tag{
+  font-size:13px;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.04);
+  color:var(--muted);
+}
+
+.btn{
+  margin-top:18px;
+  padding:13px 18px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  font-weight:600;
+  text-align:center;
+  text-decoration:none;
+  color:var(--text);
+}
+
+.btn.creator{
+  background:linear-gradient(90deg, rgba(214,179,106,.30), rgba(214,179,106,.08));
+  border-color:rgba(214,179,106,.45);
+}
+
+.btn.accords{
+  background:linear-gradient(90deg, rgba(126,245,209,.28), rgba(126,245,209,.08));
+  border-color:rgba(126,245,209,.45);
+}
+
+footer{
+  margin-top:56px;
+  text-align:center;
+  font-size:13px;
+  color:var(--muted);
+}
+</style>
+</head>
+
+<body>
+<main>
+
+<header>
+  <h1>JirPlays</h1>
+  <p>Choose your path</p>
+</header>
+
+<section class="choices">
+
+  <!-- CREATOR HUB -->
+  <div class="card">
+    <div class="symbol creator">🐼🐼</div>
+    <h2>Creator Hub</h2>
+    <p>
+      Streams, uploads, schedules, and community.
+      Cozy chaos powered by pandas and red pandas.
+    </p>
+
+    <div class="tags">
+      <span class="tag">Twitch</span>
+      <span class="tag">YouTube</span>
+      <span class="tag">TikTok</span>
+      <span class="tag">Cozy</span>
+    </div>
+
+    <a class="btn creator" href="/creator.html">
+      Enter Creator Hub
+    </a>
+  </div>
+
+  <!-- OBSIDIAN ACCORDS -->
+  <div class="card">
+    <div class="symbol accords">
+      <img src="obsidian-sigil.png" alt="Obsidian Accords sigil">
+    </div>
+
+    <h2>Obsidian Accords</h2>
+    <p>
+      A Star Trek-inspired, fan-created archive of
+      starships, stations, and narrative arcs.
+    </p>
+
+    <div class="tags">
+      <span class="tag">Worldbuilding</span>
+      <span class="tag">Archive</span>
+      <span class="tag">Sci-Fi</span>
+      <span class="tag">Fan Project</span>
+    </div>
+
+    <a class="btn accords" href="/obsidian-accords/">
+      Access the Accords
+    </a>
+  </div>
+
+</section>
+
+<footer>
+  <p>
+    Fan-created projects · Not affiliated with Paramount or CBS<br>
+    © 2026–<span id="year"></span> JirPlays
+  </p>
+</footer>
+
+</main>
+
+<script>
+  (function () {
+    const y = document.getElementById("year");
+    if (y) y.textContent = new Date().getFullYear();
+  })();
+</script>
+
+</body>
+</html>
