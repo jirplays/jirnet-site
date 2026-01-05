@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Obsidian Accords</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Obsidian Accords — a Star Trek–inspired, fan-created archive of lore and worldbuilding." />
+  <meta name="theme-color" content="#0b0b12" />
+
+  <style>
+    :root{
+      --bg:#0b0b12;
+      --bg2:#0f1620;
+
+      --text:rgba(234,250,246,.94);
+      --muted:rgba(159,191,181,.78);
+
+      --mint:#7ef5d1;
+      --teal:#4aa3a3;
+
+      --line:rgba(126,245,209,.22);
+      --line2:rgba(255,255,255,.10);
+
+      --card:rgba(255,255,255,.04);
+      --card2:rgba(255,255,255,.07);
+
+      --radius:18px;
+      --shadow:0 18px 60px rgba(0,0,0,.35);
+    }
+
+    [data-theme="light"]{
+      --bg:#f6fffc;
+      --bg2:#ffffff;
+
+      --text:rgba(10,25,22,.92);
+      --muted:rgba(10,25,22,.68);
+
+      --line:rgba(74,163,163,.28);
+      --line2:rgba(10,25,22,.12);
+
+      --card:rgba(10,25,22,.06);
+      --card2:rgba(10,25,22,.10);
+
+      --shadow:0 16px 50px rgba(10,25,22,.12);
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(900px 600px at 15% 10%, rgba(126,245,209,.12), transparent 55%),
+        radial-gradient(900px 650px at 85% 20%, rgba(74,163,163,.10), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    a:focus, button:focus{ outline: 2px solid rgba(126,245,209,.40); outline-offset: 3px; border-radius: 10px; }
+
+    /* Ambient scan specks */
+    .bg-scan{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .35;
+      background-image:
+        radial-gradient(circle at 10% 22%, rgba(126,245,209,.16) 0 2px, transparent 3px),
+        radial-gradient(circle at 72% 28%, rgba(255,255,255,.10) 0 2px, transparent 3px),
+        radial-gradient(circle at 38% 78%, rgba(74,163,163,.12) 0 2px, transparent 3px),
+        radial-gradient(circle at 86% 70%, rgba(255,255,255,.09) 0 2px, transparent 3px);
+      animation: drift 9s ease-in-out infinite;
+      mix-blend-mode: screen;
+    }
+    @keyframes drift{
+      0%,100%{ transform: translateY(0); }
+      50%{ transform: translateY(12px); }
+    }
+
+    /* Header */
+    .site-header{
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(180deg, rgba(6,10,14,.78), rgba(6,10,14,.38));
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 18px;
+    }
+    [data-theme="light"] .site-header{
+      background: linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.52));
+    }
+
+    .brand{
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto;
+      column-gap: 12px;
+      align-items: center;
+    }
+    .sigil{
+      grid-row: 1 / span 2;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+    }
+    .sigil img{
+      width: 34px; height: 34px;
+      filter:
+        drop-shadow(0 0 10px rgba(126,245,209,.40))
+        drop-shadow(0 0 18px rgba(74,163,163,.25));
+      opacity: .95;
+    }
+    .brand-name{
+      font-weight: 800;
+      letter-spacing: .4px;
+    }
+    .brand-tag{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: -2px;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+    }
+
+    .nav{
+      display: none;
+      gap: 14px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .nav a{ padding: 8px 10px; border-radius: 12px; }
+    .nav a:hover{ background: var(--card); color: var(--text); }
+
+    .header-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .chip-btn{
+      border: 1px solid var(--line2);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 10px 12px;
+      cursor: pointer;
+    }
+    .chip-btn:hover{ background: var(--card2); }
+
+    @media (min-width: 860px){
+      .nav{ display:flex; }
+    }
+
+    /* Layout */
+    main{ max-width: 1100px; margin: 0 auto; padding: 18px; }
+    .section{ padding: 56px 0; }
+    .section-head{ margin-bottom: 18px; }
+    .section-head h2{ margin:0 0 6px 0; font-size: 28px; }
+    .section-head p{ margin:0; color: var(--muted); }
+
+    .grid{ display:grid; gap: 14px; }
+
+    /* Hero */
+    .hero{
+      display: grid;
+      gap: 16px;
+      padding: 26px 0 12px;
+    }
+    @media (min-width: 980px){
+      .hero{ grid-template-columns: 1.25fr .75fr; align-items: start; }
+    }
+
+    .hero-card{
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-card::after{
+      content:"";
+      position: absolute;
+      inset: -90px -120px auto auto;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(126,245,209,.18), transparent 60%);
+      filter: blur(2px);
+    }
+    .kicker{
+      margin: 0 0 8px 0;
+      color: var(--muted);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+    .hero h1{
+      margin: 0 0 10px 0;
+      font-size: 34px;
+      line-height: 1.12;
+    }
+    .accent{
+      background: linear-gradient(90deg, var(--mint), var(--teal));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .sub{
+      margin: 0 0 16px 0;
+      color: var(--muted);
+    }
+
+    .cta-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin: 12px 0 10px;
+    }
+    .btn{
+      border: 1px solid var(--line2);
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card);
+      transition: transform .15s ease, background .15s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); background: var(--card2); }
+    .btn.primary{
+      border-color: rgba(126,245,209,.30);
+      background: linear-gradient(90deg, rgba(126,245,209,.20), rgba(74,163,163,.12));
+    }
+    .btn.ghost{ background: transparent; }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .chip{
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line2);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+    }
+
+    .hero-side{ display:grid; gap: 14px; }
+
+    .notice{
+      border: 1px solid rgba(126,245,209,.28);
+      background: rgba(126,245,209,.07);
+      border-radius: 16px;
+      padding: 12px 14px;
+      color: var(--muted);
+    }
+
+    .panel{
+      border: 1px solid var(--line2);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.03);
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .panel::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius: var(--radius);
+      border: 1px solid rgba(126,245,209,.14);
+      pointer-events:none;
+    }
+
+    .panel-top{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items:center;
+      margin-bottom: 8px;
+    }
+    .sig{
+      display:inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      border: 1px solid rgba(126,245,209,.24);
+      background: rgba(126,245,209,.07);
+      color: var(--muted);
+    }
+    .sig.small{
+      border-color: rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+    }
+
+    .tags{ display:flex; flex-wrap:wrap; gap: 8px; margin-top: 10px; }
+    .tag{
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .bullets{ margin: 10px 0 0; padding-left: 18px; color: var(--muted); }
+    .bullets li{ margin: 6px 0; }
+
+    .archive-grid{ grid-template-columns: 1fr; }
+    @media (min-width: 860px){
+      .archive-grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Archive index list */
+    .list{
+      border: 1px solid var(--line2);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.03);
+      overflow: hidden;
+    }
+    .list a{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      transition: background .12s ease;
+    }
+    .list a:first-child{ border-top:none; }
+    .list a:hover{ background: rgba(255,255,255,.05); }
+    .dot{
+      width:10px; height:10px;
+      border-radius:999px;
+      background: rgba(126,245,209,.35);
+      border: 1px solid rgba(126,245,209,.35);
+      box-shadow: 0 0 12px rgba(126,245,209,.18);
+    }
+    .list strong{ display:block; }
+    .list span{ display:block; color: var(--muted); font-size: 13px; margin-top: 2px; }
+    .arrow{ margin-left:auto; color: var(--muted); }
+
+    /* Footer */
+    .footer{
+      padding: 34px 0 20px;
+      border-top: 1px solid var(--line);
+      margin-top: 34px;
+    }
+    .footer-inner{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      justify-content:space-between;
+      align-items: baseline;
+    }
+    .footer-links{
+      display:flex;
+      gap:12px;
+      color: var(--muted);
+    }
+    .footer-links a:hover{ color: var(--text); }
+    .fine{ margin: 10px 0 0 0; font-size: 12px; color: var(--muted); }
+  </style>
+</head>
+
+<body>
+  <div class="bg-scan" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Go to top">
+      <span class="sigil" aria-hidden="true">
+        <!-- Put obsidian-sigil.png in the ROOT of the site -->
+        <!-- From /obsidian-accords/index.html, use ../obsidian-sigil.png -->
+        <img src="../obsidian-sigil.png" alt="" />
+      </span>
+      <span class="brand-name">Obsidian Accords</span>
+      <span class="brand-tag">observe · evaluate · respond</span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <a href="#archive">Archive</a>
+      <a href="#threads">Threads</a>
+      <a href="#about">About</a>
+      <a href="/index.html">Gateway</a>
+      <a href="/creator.html">Creator Hub</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="chip-btn" href="/index.html" aria-label="Back to gateway">⬅︎</a>
+      <button class="chip-btn" id="themeToggle" type="button" aria-label="Toggle theme">✨</button>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-card">
+        <p class="kicker">Classified Archive</p>
+        <h1>
+          The <span class="accent">Obsidian Accords</span> —
+          a worldbuilding archive of ships, stations, and narrative residue.
+        </h1>
+        <p class="sub">
+          Star Trek–inspired, fan-created lore presented in an in-universe archive tone.
+          This hub is built to hold episode cards, arc summaries, dossiers, and visual records.
+        </p>
+
+        <div class="cta-row">
+          <a class="btn primary" href="#archive">Open Archive Index</a>
+          <a class="btn ghost" href="#threads">View Active Threads</a>
+        </div>
+
+        <div class="chips" aria-label="Highlights">
+          <span class="chip">Archive UI</span>
+          <span class="chip">Worldbuilding-first</span>
+          <span class="chip">Starships & Stations</span>
+          <span class="chip">Continuity</span>
+        </div>
+      </div>
+
+      <aside class="hero-side">
+        <div class="notice">
+          <strong>Fan Project Notice:</strong>
+          This is a fan-created, non-commercial creative project and is not affiliated with or endorsed by Paramount, CBS, or Star Trek.
+        </div>
+
+        <div class="panel">
+          <div class="panel-top">
+            <span class="sig">STATUS</span>
+            <span class="sig small">ACTIVE</span>
+          </div>
+          <h3 style="margin:0 0 6px 0;">Archive Readiness</h3>
+          <p style="margin:0; color:var(--muted);">
+            Add pages as you go: dossiers, episode cards, image galleries, mission logs.
+            This index is ready for expansion.
+          </p>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ARCHIVE INDEX -->
+    <section id="archive" class="section">
+      <div class="section-head">
+        <h2>Archive Index</h2>
+        <p>Entry points into the Accords. Add new modules as your lore grows.</p>
+      </div>
+
+      <div class="list" role="list">
+        <!-- Update these hrefs later when you add subpages -->
+        <a role="listitem" href="#" aria-disabled="true">
+          <span class="dot" aria-hidden="true"></span>
+          <div>
+            <strong>Obsidian Starbase</strong>
+            <span>Operations, departments, and anomaly watch logs</span>
+          </div>
+          <span class="arrow" aria-hidden="true">⏳</span>
+        </a>
+
+        <a role="listitem" href="#" aria-disabled="true">
+          <span class="dot" aria-hidden="true"></span>
+          <div>
+            <strong>USS Sacagawea · NCC-80752</strong>
+            <span>Temporal designation records and mission residue</span>
+          </div>
+          <span class="arrow" aria-hidden="true">⏳</span>
+        </a>
+
+        <a role="listitem" href="#" aria-disabled="true">
+          <span class="dot" aria-hidden="true"></span>
+          <div>
+            <strong>Episode Cards</strong>
+            <span>Teasers, titles, key beats, and aftermath</span>
+          </div>
+          <span class="arrow" aria-hidden="true">⏳</span>
+        </a>
+
+        <a role="listitem" href="#" aria-disabled="true">
+          <span class="dot" aria-hidden="true"></span>
+          <div>
+            <strong>Dossiers</strong>
+            <span>Key figures, factions, and active risks</span>
+          </div>
+          <span class="arrow" aria-hidden="true">⏳</span>
+        </a>
+      </div>
+
+      <p class="fine">Tip: when you create subpages, replace the “#” with your file paths (e.g., <code>starbase.html</code> or <code>ships/sacagawea.html</code>).</p>
+    </section>
+
+    <!-- THREADS -->
+    <section id="threads" class="section">
+      <div class="section-head">
+        <h2>Active Threads</h2>
+        <p>Ongoing arcs and narrative vectors. Keep it tight, add detail on subpages.</p>
+      </div>
+
+      <div class="grid archive-grid">
+        <article class="panel">
+          <div class="panel-top">
+            <span class="sig">OBSIDIAN STARBASE</span>
+            <span class="sig small">OBSERVE · EVALUATE · RESPOND</span>
+          </div>
+          <h3 style="margin:0 0 6px 0;">Obsidian Starbase</h3>
+          <p style="margin:0; color:var(--muted);">
+            A Federation starbase designed for monitoring anomalies and political pressure points.
+            Routine observation rarely stays routine.
+          </p>
+          <div class="tags">
+            <span class="tag">Starbase Ops</span>
+            <span class="tag">Anomaly Watch</span>
+            <span class="tag">Diplomacy</span>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-top">
+            <span class="sig">USS SACAGAWEA</span>
+            <span class="sig small">NCC-80752 · NOVA-CLASS</span>
+          </div>
+          <h3 style="margin:0 0 6px 0;">Temporal Integrity Risk</h3>
+          <p style="margin:0; color:var(--muted);">
+            Starfleet designates the Sacagawea as a temporal risk. The crew is marked.
+            Every mission leaves residue — and residue has consequences.
+          </p>
+          <div class="tags">
+            <span class="tag">Temporal Fallout</span>
+            <span class="tag">Risk Designation</span>
+            <span class="tag">Residue</span>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-top">
+            <span class="sig">ARC</span>
+            <span class="sig small">ASHES IN THE DARK</span>
+          </div>
+          <h3 style="margin:0 0 6px 0;">Ashes in the Dark</h3>
+          <ul class="bullets">
+            <li>Fracture lines form under pressure</li>
+            <li>Pursuit creates collateral truths</li>
+            <li>Some losses echo</li>
+          </ul>
+        </article>
+
+        <article class="panel">
+          <div class="panel-top">
+            <span class="sig">ARCS</span>
+            <span class="sig small">THE HOOK · RESIDUALS</span>
+          </div>
+          <h3 style="margin:0 0 6px 0;">The Hook / Residuals</h3>
+          <ul class="bullets">
+            <li><strong>The Hook</strong> — the designation that changes everything</li>
+            <li><strong>Residuals</strong> — what’s left behind doesn’t stay behind</li>
+          </ul>
+          <p style="margin:0; color:var(--muted);">
+            Add episode cards, summaries, and artifacts as you publish them.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section">
+      <div class="section-head">
+        <h2>About the Accords</h2>
+        <p>Design intent, tone, and how to use this archive.</p>
+      </div>
+
+      <div class="grid archive-grid">
+        <article class="panel">
+          <div class="panel-top">
+            <span class="sig">TONE</span>
+            <span class="sig small">ARCHIVE</span>
+          </div>
+          <h3 style="margin:0 0 6px 0;">Presentation Style</h3>
+          <p style="margin:0; color:var(--muted);">
+            Clean headers, subtle scanner accents, and worldbuilding-first writing.
+            Not parody — more “classified dossier” than “cosplay UI.”
+          </p>
+          <div class="tags">
+            <span class="tag">Archive UI</span>
+            <span class="tag">Story-First</span>
+            <span class="tag">Continuity</span>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-top">
+            <span class="sig">NEXT</span>
+            <span class="sig small">EXPAND</span>
+          </div>
+          <h3 style="margin:0 0 6px 0;">Recommended Additions</h3>
+          <ul class="bullets">
+            <li>Starbase department index</li>
+            <li>Ship roster & technical sheets</li>
+            <li>Episode card gallery</li>
+            <li>Timeline / arc tracker</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div>
+          <strong>Obsidian Accords</strong>
+          <p style="margin:6px 0 0; color:var(--muted);">Fan-created lore archive.</p>
+        </div>
+        <div class="footer-links">
+          <a href="/index.html">Gateway</a>
+          <a href="/creator.html">Creator Hub</a>
+          <a href="#archive">Archive</a>
+        </div>
+      </div>
+      <p class="fine">
+        Fan-created project · Not affiliated with Paramount or CBS<br/>
+        © 2026–<span id="year"></span> JirPlays
+      </p>
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      // Footer year (aligned across site)
+      const yearEl = document.getElementById("year");
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      // Theme toggle (optional)
+      const toggle = document.getElementById("themeToggle");
+      const KEY = "jirplays_theme";
+      const saved = localStorage.getItem(KEY);
+      if (saved) document.documentElement.setAttribute("data-theme", saved);
+
+      toggle?.addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme");
+        const next = current === "light" ? "" : "light";
+        if (next) document.documentElement.setAttribute("data-theme", next);
+        else document.documentElement.removeAttribute("data-theme");
+        localStorage.setItem(KEY, next || "");
+      });
+    })();
+  </script>
+</body>
+</html>
